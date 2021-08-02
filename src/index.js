@@ -1,20 +1,11 @@
 import React from 'react'
 import {render} from 'react-dom'
-import './style.scss'
-
-function Initialize() {
-    return (
-        <p>
-            Hello World!
-        </p>
-    )
-}
+import './sass/style.sass'
 
 function App () {
     return (
-        <div>
+        <div className="container">
             <h1>Start</h1>
-            <Initialize />
         </div>
     )
 }
