@@ -5,12 +5,60 @@ import './sass/style.sass'
 const RELEASE_DATE = new Date(2022, 3, 28);
 
 class TimeToRelease extends React.Component {
+
   constructor(props) {
     super(props);
+
     this.state = {
       date: this.props.date,
       currentDate: new Date(),
+      timeMethod: this.props.timeMethod,
+      currentLang: this.props.language,
     };
+
+    this.second = 1000;
+    this.minute = 60;
+    this.hour = 60;
+    this.hoursInDay = 24;
+    this.daysInWeek = 7;
+    this.monthsInYear = 12;
+
+    this.timeMethods = {
+      'months': this.getMonthsDifference.bind(this),
+      'weeks': this.getWeeksDifference.bind(this),
+      'days': this.getDaysDifference.bind(this),
+      'hours': this.getHoursDifference.bind(this),
+      'minutes': this.getMinutesDifference.bind(this),
+      'seconds': this.getSecondsDifference.bind(this),
+    };
+
+    this.ruVocabulary = {
+      'months': 'Месяцев',
+      'weeks': 'Недель',
+      'days': 'Дней',
+      'hours': 'Часов',
+      'minutes': 'Минут',
+      'seconds': 'Секунд',
+    }
+
+    this.engVocabulary = {
+      'months': 'Months',
+      'weeks': 'Weeks',
+      'days': 'Days',
+      'hours': 'Hours',
+      'minutes': 'Minutes',
+      'seconds': 'Seconds',
+    }
+
+    this.changeLanguage = this.changeLanguage.bind(this);
+  }
+
+  changeLanguage() {
+    if (this.state.currentLang === 'ru') {
+      this.setState({currentLang: 'eng'});
+    } else {
+      this.setState({currentLang: 'ru'});
+    }
   }
 
   update(){
@@ -26,35 +74,54 @@ class TimeToRelease extends React.Component {
   }
 
   getMonthsDifference(finalDate, currentDate) {
-    return finalDate.getMonth() - currentDate.getMonth() + (12 * (finalDate.getFullYear() - currentDate.getFullYear()));
+    return finalDate.getMonth() - currentDate.getMonth() + (this.monthsInYear * (finalDate.getFullYear() - currentDate.getFullYear()));
+  }
+
+  getWeeksDifference(finalDate, currentDate) {
+    return Math.floor((finalDate - currentDate) / (this.second * this.minute * this.hour * this.hoursInDay * this.daysInWeek));
+  }
+
+  getDaysDifference(finalDate, currentDate) {
+    return Math.ceil((finalDate - currentDate) / (this.second * this.minute * this.hour * this.hoursInDay));
+  }
+
+  getHoursDifference(finalDate, currentDate) {
+    return Math.ceil((finalDate - currentDate) / (this.second * this.minute * this.hour));
+  }
+
+  getMinutesDifference(finalDate, currentDate) {
+    return Math.ceil((finalDate - currentDate) / (this.second * this.minute));
   }
 
   getSecondsDifference(finalDate, currentDate) {
-    return Math.ceil(Math.abs(finalDate - currentDate) / 1000);
+    return Math.ceil(Math.abs(finalDate - currentDate) / this.second);
   }
 
   render() {
-    const finalDate = this.state.date
-    const currentDate = this.state.currentDate
+    const finalDate = this.state.date;
+    const currentDate = this.state.currentDate;
+
     return (
-      <dl className='timer__time-difference-list'>
-        <div className='timer__time-difference-item'>
-          <dt><p>Месяцев до релиза</p></dt>
-          <dd><p>{this.getMonthsDifference(finalDate, currentDate)}</p></dd>
-        </div>
-        <div className='timer__time-difference-item'>
-          <dt><p>Секунд до релиза</p></dt>
-          <dd><p>{this.getSecondsDifference(finalDate, currentDate)}</p></dd>
-        </div>
-      </dl>
+      <div className='timer__time-difference-item'>
+        <dt><p>{this.state.currentLang === 'ru' ? `${this.ruVocabulary[this.state.timeMethod]} до релиза` : `${this.engVocabulary[this.state.timeMethod]} till release`}</p></dt>
+        <dd><p>{this.timeMethods[this.state.timeMethod](finalDate, currentDate)}</p></dd>
+      </div>
     );
+
   }
 }
 
 function MainApp () {
     return (
         <div className='timer__wrapper'>
-            <TimeToRelease key = 'TimerContainer' date = {RELEASE_DATE}/>
+            <dl className='timer__time-difference-list'>
+              <TimeToRelease key = 'monthCounter' date = {RELEASE_DATE} timeMethod = 'months' language='ru'/>
+              <TimeToRelease key = 'weekCounter' date = {RELEASE_DATE} timeMethod = 'weeks' language='ru'/>
+              <TimeToRelease key = 'daysCounter' date = {RELEASE_DATE} timeMethod = 'days' language='ru'/>
+              <TimeToRelease key = 'hoursCounter' date = {RELEASE_DATE} timeMethod = 'hours' language='ru'/>
+              <TimeToRelease key = 'minutesCounter' date = {RELEASE_DATE} timeMethod = 'minutes' language='ru'/>
+              <TimeToRelease key = 'secondsCounter' date = {RELEASE_DATE} timeMethod = 'seconds' language='ru'/>
+            </dl>
               <dl className='timer__link-list'>
                 <div className='timer__link-item'>
                   <dt><p className='timer__link-text'>Ссылка на страницу в магазине Steam</p></dt>
