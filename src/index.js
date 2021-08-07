@@ -2,7 +2,11 @@ import React from 'react'
 import {render} from 'react-dom'
 import './sass/style.sass'
 
-const RELEASE_DATE = new Date(2022, 3, 28);
+const RELEASE_YEAR = 2022;
+const RELEASE_MONTH = 3;
+const RELEASE_DAY = 28;
+
+const RELEASE_DATE = new Date(RELEASE_YEAR, RELEASE_MONTH, RELEASE_DAY);
 
 class TimeToRelease extends React.Component {
 
@@ -20,12 +24,13 @@ class TimeToRelease extends React.Component {
     this.minute = 60;
     this.hour = 60;
     this.hoursInDay = 24;
-    this.daysInWeek = 7;
     this.monthsInYear = 12;
+    this.minDelay = 100;
+
+    console.log(new Date(this.state.date - this.state.currentDate));
 
     this.timeMethods = {
       'months': this.getMonthsDifference.bind(this),
-      'weeks': this.getWeeksDifference.bind(this),
       'days': this.getDaysDifference.bind(this),
       'hours': this.getHoursDifference.bind(this),
       'minutes': this.getMinutesDifference.bind(this),
@@ -34,7 +39,6 @@ class TimeToRelease extends React.Component {
 
     this.ruVocabulary = {
       'months': 'Месяцев',
-      'weeks': 'Недель',
       'days': 'Дней',
       'hours': 'Часов',
       'minutes': 'Минут',
@@ -43,22 +47,33 @@ class TimeToRelease extends React.Component {
 
     this.engVocabulary = {
       'months': 'Months',
-      'weeks': 'Weeks',
       'days': 'Days',
       'hours': 'Hours',
       'minutes': 'Minutes',
       'seconds': 'Seconds',
     }
-
-    this.changeLanguage = this.changeLanguage.bind(this);
   }
 
-  changeLanguage() {
-    if (this.state.currentLang === 'ru') {
-      this.setState({currentLang: 'eng'});
-    } else {
-      this.setState({currentLang: 'ru'});
+  calcAmountOfDays(month, year) {
+    return new Date(year, month, 0).getDate();
+  }
+
+  calcDays() {
+    let sum = 0;
+    const diffDate = this.state.currentDate;
+    diffDate.setMonth(diffDate.getMonth() + 1);
+    diffDate.setDate(1);
+    while (true) {
+      if (diffDate.getMonth() !== this.state.date.getMonth()) {
+        sum += this.calcAmountOfDays(diffDate.getMonth(), diffDate.getFullYear());
+        diffDate.setMonth(diffDate.getMonth() + 1);
+        continue;
+      }
+      diffDate.setMonth(diffDate.getMonth() - 1);
+      sum += this.calcAmountOfDays(diffDate.getMonth(), diffDate.getFullYear());
+      break;
     }
+    return sum;
   }
 
   update(){
@@ -66,7 +81,7 @@ class TimeToRelease extends React.Component {
   }
 
   componentDidMount() {
-    this.timerID = setInterval(() => this.update(), 100);
+    this.timerID = setInterval(() => this.update(), this.minDelay);
   }
 
   componentWillUnmount() {
@@ -74,27 +89,23 @@ class TimeToRelease extends React.Component {
   }
 
   getMonthsDifference(finalDate, currentDate) {
-    return finalDate.getMonth() - currentDate.getMonth() + (this.monthsInYear * (finalDate.getFullYear() - currentDate.getFullYear()));
-  }
-
-  getWeeksDifference(finalDate, currentDate) {
-    return Math.floor((finalDate - currentDate) / (this.second * this.minute * this.hour * this.hoursInDay * this.daysInWeek));
+    return new Date(finalDate - currentDate).getMonth();
   }
 
   getDaysDifference(finalDate, currentDate) {
-    return Math.ceil((finalDate - currentDate) / (this.second * this.minute * this.hour * this.hoursInDay));
+    return Math.ceil((finalDate - currentDate) / (this.second * this.minute * this.hour * this.hoursInDay)) - this.calcDays();
   }
 
   getHoursDifference(finalDate, currentDate) {
-    return Math.ceil((finalDate - currentDate) / (this.second * this.minute * this.hour));
+    return this.hoursInDay - (currentDate.getHours() + 1);
   }
 
   getMinutesDifference(finalDate, currentDate) {
-    return Math.ceil((finalDate - currentDate) / (this.second * this.minute));
+    return this.minute - (currentDate.getMinutes() + 1);
   }
 
   getSecondsDifference(finalDate, currentDate) {
-    return Math.ceil(Math.abs(finalDate - currentDate) / this.second);
+    return this.minute - (currentDate.getSeconds() + 1);
   }
 
   render() {
@@ -111,17 +122,36 @@ class TimeToRelease extends React.Component {
   }
 }
 
-function MainApp () {
+class App extends React.Component{
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentLang: 'ru',
+    };
+  }
+
+  onClick () {
+    return 1;
+  }
+
+  render () {
     return (
-        <div className='timer__wrapper'>
-            <dl className='timer__time-difference-list'>
-              <TimeToRelease key = 'monthCounter' date = {RELEASE_DATE} timeMethod = 'months' language='ru'/>
-              <TimeToRelease key = 'weekCounter' date = {RELEASE_DATE} timeMethod = 'weeks' language='ru'/>
-              <TimeToRelease key = 'daysCounter' date = {RELEASE_DATE} timeMethod = 'days' language='ru'/>
-              <TimeToRelease key = 'hoursCounter' date = {RELEASE_DATE} timeMethod = 'hours' language='ru'/>
-              <TimeToRelease key = 'minutesCounter' date = {RELEASE_DATE} timeMethod = 'minutes' language='ru'/>
-              <TimeToRelease key = 'secondsCounter' date = {RELEASE_DATE} timeMethod = 'seconds' language='ru'/>
-            </dl>
+      <React.Fragment>
+        <header>
+          <h1 className="visually-hidden">Отсчет времени до релиза S.T.A.L.K.E.R. 2</h1>
+          <div className='container'></div>
+        </header>
+        <main className='page-main'>
+          <section className='timer container'>
+            <div className='timer__wrapper'>
+              <dl className='timer__time-difference-list'>
+                <TimeToRelease key = 'monthCounter' date = {RELEASE_DATE} timeMethod = 'months' language='ru'/>
+                <TimeToRelease key = 'daysCounter' date = {RELEASE_DATE} timeMethod = 'days' language='ru'/>
+                <TimeToRelease key = 'hoursCounter' date = {RELEASE_DATE} timeMethod = 'hours' language='ru'/>
+                <TimeToRelease key = 'minutesCounter' date = {RELEASE_DATE} timeMethod = 'minutes' language='ru'/>
+                <TimeToRelease key = 'secondsCounter' date = {RELEASE_DATE} timeMethod = 'seconds' language='ru'/>
+              </dl>
               <dl className='timer__link-list'>
                 <div className='timer__link-item'>
                   <dt><p className='timer__link-text'>Ссылка на страницу в магазине Steam</p></dt>
@@ -132,18 +162,19 @@ function MainApp () {
                   <dd><a href='https://www.stalker2.com/' target='_blank' className='timer__official-promo'></a></dd>
                 </div>
               </dl>
-        </div>
+            </div>
+          </section>
+        </main>
+        <footer>
+          <section className='container'>
+            <p className='footer__copyright'>Все права принадлежат оригинальным правообладателям - GSC Game World</p>
+            <p className='footer__text'>Created with React power</p>
+          </section>
+        </footer>
+      </React.Fragment>
     )
+  }
 }
 
-function FooterApp () {
-  return (
-    <div className='container'>
-        <p className='footer__copyright'>Все права принадлежат оригинальным правообладателям - GSC Game World</p>
-        <p className='footer__text'>Created with React power</p>
-    </div>
-  )
-}
 
-render (<MainApp/>, document.querySelector('.timer'));
-render (<FooterApp/>, document.querySelector('.footer'));
+render (<App/>, document.querySelector('.root'));
