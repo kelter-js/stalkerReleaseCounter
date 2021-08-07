@@ -17,7 +17,7 @@ class TimeToRelease extends React.Component {
       date: this.props.date,
       currentDate: new Date(),
       timeMethod: this.props.timeMethod,
-      currentLang: this.props.language,
+      currentLanguage: this.props.language,
     };
 
     this.second = 1000;
@@ -26,8 +26,6 @@ class TimeToRelease extends React.Component {
     this.hoursInDay = 24;
     this.monthsInYear = 12;
     this.minDelay = 100;
-
-    console.log(new Date(this.state.date - this.state.currentDate));
 
     this.timeMethods = {
       'months': this.getMonthsDifference.bind(this),
@@ -84,6 +82,12 @@ class TimeToRelease extends React.Component {
     this.timerID = setInterval(() => this.update(), this.minDelay);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.language != this.state.currentLanguage) {
+      this.setState({currentLanguage: nextProps.language});
+    }
+  }
+
   componentWillUnmount() {
     clearInterval(this.timerID);
   }
@@ -114,7 +118,7 @@ class TimeToRelease extends React.Component {
 
     return (
       <div className='timer__time-difference-item'>
-        <dt><p>{this.state.currentLang === 'ru' ? `${this.ruVocabulary[this.state.timeMethod]} до релиза` : `${this.engVocabulary[this.state.timeMethod]} till release`}</p></dt>
+        <dt><p>{this.state.currentLanguage === 'ru' ? `${this.ruVocabulary[this.state.timeMethod]} до релиза` : `${this.engVocabulary[this.state.timeMethod]} till release`}</p></dt>
         <dd><p>{this.timeMethods[this.state.timeMethod](finalDate, currentDate)}</p></dd>
       </div>
     );
@@ -122,59 +126,129 @@ class TimeToRelease extends React.Component {
   }
 }
 
-class App extends React.Component{
+class BuyPages extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      currentLang: 'ru',
+      currentLanguageuage: this.props.language,
+    };
+
+    this.ruVocabulary = {
+      'official': 'Ссылка на официальный сайт',
+      'steam': 'Ссылка на страницу в магазине Steam',
+    };
+
+    this.engVocabulary = {
+      'official': 'Official page link',
+      'steam': 'Steam page link',
     };
   }
 
-  onClick () {
-    return 1;
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.language != this.state.currentLanguageuage) {
+      this.setState({currentLanguageuage: nextProps.language});
+    }
   }
 
   render () {
     return (
       <React.Fragment>
-        <header>
-          <h1 className="visually-hidden">Отсчет времени до релиза S.T.A.L.K.E.R. 2</h1>
-          <div className='container'></div>
-        </header>
-        <main className='page-main'>
-          <section className='timer container'>
-            <div className='timer__wrapper'>
-              <dl className='timer__time-difference-list'>
-                <TimeToRelease key = 'monthCounter' date = {RELEASE_DATE} timeMethod = 'months' language='ru'/>
-                <TimeToRelease key = 'daysCounter' date = {RELEASE_DATE} timeMethod = 'days' language='ru'/>
-                <TimeToRelease key = 'hoursCounter' date = {RELEASE_DATE} timeMethod = 'hours' language='ru'/>
-                <TimeToRelease key = 'minutesCounter' date = {RELEASE_DATE} timeMethod = 'minutes' language='ru'/>
-                <TimeToRelease key = 'secondsCounter' date = {RELEASE_DATE} timeMethod = 'seconds' language='ru'/>
-              </dl>
-              <dl className='timer__link-list'>
-                <div className='timer__link-item'>
-                  <dt><p className='timer__link-text'>Ссылка на страницу в магазине Steam</p></dt>
-                  <dd><a href='https://store.steampowered.com/app/1643320/STALKER_2_Heart_of_Chernobyl/?l=russian' target='_blank' className='timer__steam-promo'></a></dd>
-                </div>
-                <div className='timer__link-item'>
-                  <dt><p className='timer__link-text'>Ссылка на официальный сайт</p></dt>
-                  <dd><a href='https://www.stalker2.com/' target='_blank' className='timer__official-promo'></a></dd>
-                </div>
-              </dl>
-            </div>
-          </section>
-        </main>
-        <footer>
-          <section className='container'>
-            <p className='footer__copyright'>Все права принадлежат оригинальным правообладателям - GSC Game World</p>
-            <p className='footer__text'>Created with React power</p>
-          </section>
-        </footer>
+        <div key='steamPage' className='timer__link-item'>
+          <dt><p className='timer__link-text'>{(this.state.currentLanguageuage === 'ru' ? this.ruVocabulary.steam : this.engVocabulary.steam)}</p></dt>
+          <dd><a href='https://store.steampowered.com/app/1643320/STALKER_2_Heart_of_Chernobyl/?l=russian' target='_blank' className='timer__steam-promo'></a></dd>
+        </div>
+        <div key='officialPage' className='timer__link-item'>
+          <dt><p className='timer__link-text'>{(this.state.currentLanguageuage === 'ru' ? this.ruVocabulary.official : this.engVocabulary.official)}</p></dt>
+          <dd><a href='https://www.stalker2.com/' target='_blank' className='timer__official-promo'></a></dd>
+        </div>
       </React.Fragment>
     )
   }
 }
 
+class Copyright extends React.Component {
+  constructor (props) {
+    super(props);
 
-render (<App/>, document.querySelector('.root'));
+    this.state = {
+      currentLanguageuage: this.props.language,
+    };
+
+    this.ruVocabulary = {
+      'copyright': 'Все права принадлежат оригинальным правообладателям - GSC Game World',
+      'reactPower': 'Создано с использованием React',
+    };
+
+    this.engVocabulary = {
+      'copyright': 'All rights reserved by original owner - GSC Game World',
+      'reactPower': 'Created with React power',
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.language != this.state.currentLanguageuage) {
+      this.setState({currentLanguageuage: nextProps.language});
+    }
+  }
+
+  render () {
+    return (
+      <React.Fragment>
+        <p className='footer__copyright'>{(this.state.currentLanguageuage === 'ru' ? this.ruVocabulary.copyright : this.engVocabulary.copyright)}</p>
+        <p className='footer__text'>{(this.state.currentLanguageuage === 'ru' ? this.ruVocabulary.reactPower : this.engVocabulary.reactPower)}</p>
+      </React.Fragment>
+    )
+  }
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentLanguage: this.props.language,
+    };
+
+    this.clickHandler = this.clickHandler.bind(this);
+  }
+
+  render () {
+    return (
+      <React.Fragment>
+        <header className = 'page-header'>
+          <h1 className = 'visually-hidden'>{(this.state.currentLanguage === 'ru') ? 'Отсчет времени до релиза S.T.A.L.K.E.R. 2' : 'Counter till release date of S.T.A.L.K.E.R. 2'}</h1>
+          <div className = 'container page-header__wrapper'>
+            <button onClick = {this.clickHandler} className = 'page-header__change-language'>{this.state.currentLanguage}</button>
+          </div>
+        </header>
+        <main className = 'page-main'>
+          <section className = 'timer container'>
+            <div className = 'timer__wrapper'>
+              <dl className = 'timer__time-difference-list'>
+                <TimeToRelease key = 'monthCounter' date = {RELEASE_DATE} timeMethod = 'months' language = {this.state.currentLanguage}/>
+                <TimeToRelease key = 'daysCounter' date = {RELEASE_DATE} timeMethod = 'days' language = {this.state.currentLanguage}/>
+                <TimeToRelease key = 'hoursCounter' date = {RELEASE_DATE} timeMethod = 'hours' language = {this.state.currentLanguage}/>
+                <TimeToRelease key = 'minutesCounter' date = {RELEASE_DATE} timeMethod = 'minutes' language = {this.state.currentLanguage}/>
+                <TimeToRelease key = 'secondsCounter' date = {RELEASE_DATE} timeMethod = 'seconds' language = {this.state.currentLanguage}/>
+              </dl>
+              <dl className = 'timer__link-list'>
+                <BuyPages key = 'buyPages' language={this.state.currentLanguage}/>
+              </dl>
+            </div>
+          </section>
+        </main>
+        <footer>
+          <section className='container'><Copyright key = 'copyright' language = {this.state.currentLanguage}/></section>
+        </footer>
+      </React.Fragment>
+    )
+  }
+
+  clickHandler () {
+    (this.state.currentLanguage === 'ru') ? this.setState({currentLanguage: 'eng'}) : this.setState({currentLanguage: 'ru'});
+  }
+}
+
+
+render (<App language = 'ru'/>, document.querySelector('.root'));
