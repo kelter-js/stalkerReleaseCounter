@@ -84,23 +84,23 @@ class TimeToRelease extends React.Component {
     clearInterval(this.timerID);
   }
 
-  getMonthsDifference(finalDate, currentDate) {
+  getMonthsDifference(currentDate, finalDate) {
     return new Date(finalDate - currentDate).getMonth();
   }
 
-  getDaysDifference(finalDate, currentDate) {
+  getDaysDifference(currentDate, finalDate) {
     return Math.ceil((finalDate - currentDate) / (this.second * this.minute * this.hour * this.hoursInDay)) - this.calcDays();
   }
 
-  getHoursDifference(finalDate, currentDate) {
+  getHoursDifference(currentDate) {
     return this.hoursInDay - (currentDate.getHours() + 1);
   }
 
-  getMinutesDifference(finalDate, currentDate) {
+  getMinutesDifference(currentDate) {
     return this.minute - (currentDate.getMinutes() + 1);
   }
 
-  getSecondsDifference(finalDate, currentDate) {
+  getSecondsDifference(currentDate) {
     return this.minute - (currentDate.getSeconds() + 1);
   }
 
@@ -110,8 +110,8 @@ class TimeToRelease extends React.Component {
 
     return (
       <div className='timer__time-difference-item'>
-        <dt><p>{this.state.currentLanguage === 'ru' ? `${this.ruVocabulary[this.state.timeMethod]} до релиза` : `${this.engVocabulary[this.state.timeMethod]} till release`}</p></dt>
-        <dd><p>{this.timeMethods[this.state.timeMethod](finalDate, currentDate)}</p></dd>
+        <dt><p className='timer__time-difference-title'>{this.state.currentLanguage === 'ru' ? `${this.ruVocabulary[this.state.timeMethod]} до релиза` : `${this.engVocabulary[this.state.timeMethod]} till release`}</p></dt>
+        <dd><p className='timer__time-difference-amount'>{this.timeMethods[this.state.timeMethod](currentDate, finalDate)}</p></dd>
       </div>
     );
 
