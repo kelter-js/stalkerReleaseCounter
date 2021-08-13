@@ -7,11 +7,17 @@
   padding: 40px
   background-color: $black-rgba
 
+  @media (max-width: $mobile-width-only)
+    padding: 0
+
 .timer__link-list
   display: flex
   justify-content: space-around
   margin: 0 auto
   padding: 0
+
+  @media (max-width: $mobile-width-only)
+    flex-direction: column
 
 .timer__link-list dd
   display: flex
@@ -42,6 +48,24 @@
   justify-content: space-between
   margin: 0
   margin-bottom: 40px
+  @media (min-width: $tablet-width) and (max-width: $desktop-width)
+    flex-wrap: wrap
+    justify-content: center
+  @media (max-width: $mobile-width-only)
+    flex-wrap: wrap
+    justify-content: center
+
+
+.timer__time-difference-item
+  @media (min-width: $tablet-width) and (max-width: $desktop-width)
+    width: 250px
+    margin-bottom: 40px
+
+    &:nth-of-type(1n)
+      margin-right: 50px
+
+  @media (max-width: $mobile-width-only)
+    margin-bottom: 20px
 
 .timer__time-difference-list dd
   display: flex
@@ -59,8 +83,22 @@
 .timer__time-difference-amount
   margin: 0
   padding: 0
+  @media (min-width: $tablet-width) and (max-width: $desktop-width)
+    text-align: center
 
 .timer__time-difference-amount
   font-size: 70px
   line-height: 70px
   margin: auto
+
+.timer__header
+  text-align: center
+  margin: 0
+  margin-bottom: 40px
+  padding: 0
+  @media (max-width: $mobile-width-only)
+    line-height: 50px
+
+.timer__link-item
+  @media (max-width: $mobile-width-only)
+    margin-bottom: 15px

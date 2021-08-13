@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 
-class TimeToRelease extends React.Component {
+class TimeToRelease extends PureComponent {
 
   constructor(props) {
     super(props);
@@ -75,9 +75,13 @@ class TimeToRelease extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.language != this.state.currentLanguage) {
+    if (nextProps.language != this.props.currentLanguage) {
       this.setState({currentLanguage: nextProps.language});
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.currentLanguage !== nextState.currentDate;
   }
 
   componentWillUnmount() {
@@ -93,7 +97,7 @@ class TimeToRelease extends React.Component {
   }
 
   getHoursDifference(currentDate) {
-    return this.hoursInDay - (currentDate.getHours() + 1);
+    return this.hoursInDay - (currentDate.getHours() + 2);
   }
 
   getMinutesDifference(currentDate) {

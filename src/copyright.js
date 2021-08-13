@@ -1,11 +1,11 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 
-class Copyright extends React.Component {
+class Copyright extends PureComponent {
   constructor (props) {
     super(props);
 
     this.state = {
-      currentLanguageuage: this.props.language,
+      currentLanguage: this.props.language,
     };
 
     this.ruVocabulary = {
@@ -20,16 +20,20 @@ class Copyright extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.language != this.state.currentLanguageuage) {
-      this.setState({currentLanguageuage: nextProps.language});
+    if (nextProps.language != this.props.currentLanguage) {
+      this.setState({currentLanguage: nextProps.language});
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.currentLanguage !== nextState.currentDate;
   }
 
   render () {
     return (
       <React.Fragment>
-        <p className='footer__copyright'>{(this.state.currentLanguageuage === 'ru' ? this.ruVocabulary.copyright : this.engVocabulary.copyright)}</p>
-        <p className='footer__text'>{(this.state.currentLanguageuage === 'ru' ? this.ruVocabulary.reactPower : this.engVocabulary.reactPower)}</p>
+        <p className='footer__copyright'>{(this.state.currentLanguage === 'ru' ? this.ruVocabulary.copyright : this.engVocabulary.copyright)}</p>
+        <p className='footer__text'>{(this.state.currentLanguage === 'ru' ? this.ruVocabulary.reactPower : this.engVocabulary.reactPower)}</p>
       </React.Fragment>
     )
   }

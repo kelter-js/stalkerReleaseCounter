@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import { TimeToRelease } from './time-to-release'
 import { BuyPages } from './buy-pages'
 import { Copyright } from './copyright'
 
-class App extends React.Component {
+class App extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -26,6 +26,7 @@ class App extends React.Component {
         <main className = 'page-main'>
           <section className = 'timer container'>
             <div className = 'timer__wrapper'>
+              <h2 className='timer__header'>{(this.state.currentLanguage === 'ru') ? 'Отсчет времени до релиза\u00A0S.T.A.L.K.E.R.\u00A02' : 'Counter till release date\u00A0of\u00A0S.T.A.L.K.E.R.\u00A02'}</h2>
               <dl className = 'timer__time-difference-list'>
                 <TimeToRelease key = 'monthCounter' date = {this.props.releaseDate} timeMethod = 'months' language = {this.state.currentLanguage}/>
                 <TimeToRelease key = 'daysCounter' date = {this.props.releaseDate} timeMethod = 'days' language = {this.state.currentLanguage}/>
