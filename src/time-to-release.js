@@ -74,14 +74,13 @@ class TimeToRelease extends PureComponent {
     this.timerID = setInterval(() => this.update(), this.minDelay);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.language != this.props.currentLanguage) {
-      this.setState({currentLanguage: nextProps.language});
+  static getDerivedStateFromProps (nextProps, state) {
+    if (nextProps.language !== state.currentLanguage) {
+      return {
+        currentLanguage: nextProps.language,
+      };
     }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.state.currentLanguage !== nextState.currentDate;
+    return null;
   }
 
   componentWillUnmount() {
