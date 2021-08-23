@@ -6,10 +6,7 @@ class TimeToRelease extends PureComponent {
     super(props);
 
     this.state = {
-      date: this.props.date,
       currentDate: new Date(),
-      timeMethod: this.props.timeMethod,
-      currentLanguage: this.props.language,
     };
 
     this.second = 1000;
@@ -54,7 +51,7 @@ class TimeToRelease extends PureComponent {
     diffDate.setMonth(diffDate.getMonth() + 1);
     diffDate.setDate(1);
     while (true) {
-      if (diffDate.getMonth() !== this.state.date.getMonth()) {
+      if (diffDate.getMonth() !== this.props.date.getMonth()) {
         sum += this.calcAmountOfDays(diffDate.getMonth(), diffDate.getFullYear());
         diffDate.setMonth(diffDate.getMonth() + 1);
         continue;
@@ -108,13 +105,19 @@ class TimeToRelease extends PureComponent {
   }
 
   render() {
-    const finalDate = this.state.date;
+    const finalDate = this.props.date;
     const currentDate = this.state.currentDate;
+    const timeMethod = this.props.timeMethod;
+    const currentLanguage = this.props.language;
 
     return (
       <div className='timer__time-difference-item'>
-        <dt><p className='timer__time-difference-title'>{this.state.currentLanguage === 'ru' ? `${this.ruVocabulary[this.state.timeMethod]} до релиза` : `${this.engVocabulary[this.state.timeMethod]} till release`}</p></dt>
-        <dd><p className='timer__time-difference-amount'>{this.timeMethods[this.state.timeMethod](currentDate, finalDate)}</p></dd>
+        <dt>
+          <p className='timer__time-difference-title'>{currentLanguage === 'ru' ? `${this.ruVocabulary[timeMethod]} до релиза` : `${this.engVocabulary[timeMethod]} till release`}</p>
+        </dt>
+        <dd>
+          <p className='timer__time-difference-amount'>{this.timeMethods[timeMethod](currentDate, finalDate)}</p>
+        </dd>
       </div>
     );
 
