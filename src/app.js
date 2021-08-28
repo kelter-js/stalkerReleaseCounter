@@ -14,6 +14,13 @@ class App extends PureComponent {
     this.clickHandler = this.clickHandler.bind(this);
   }
 
+  clickHandler () {
+    const currentLanguage = this.state.currentLanguage;
+    const pageLanguageHandler = this.props.pageLanguageHandler;
+    pageLanguageHandler();
+    (currentLanguage === 'ru') ? this.setState({currentLanguage: 'eng'}) : this.setState({currentLanguage: 'ru'});
+  }
+
   render () {
     const currentLanguage = this.state.currentLanguage;
     const releaseDate = this.props.releaseDate;
@@ -48,12 +55,6 @@ class App extends PureComponent {
         </footer>
       </React.Fragment>
     )
-  }
-
-  clickHandler () {
-    const currentLanguage = this.state.currentLanguage;
-
-    (currentLanguage === 'ru') ? this.setState({currentLanguage: 'eng'}) : this.setState({currentLanguage: 'ru'});
   }
 }
 
