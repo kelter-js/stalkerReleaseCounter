@@ -7,12 +7,11 @@ class PageLanguage {
       'english': englishVocabulary,
     };
 
-    this.languages = [
-      this.changeToRussian.bind(this),
-      this.changeToEnglish.bind(this),
-    ];
+    this.languages = {
+      'ru': this.changeToRussian.bind(this),
+      'eng': this.changeToEnglish.bind(this),
+    };
 
-    this.currentIndex = 0;
     this.changeLanguage = this.changeLanguage.bind(this);
   }
 
@@ -30,13 +29,8 @@ class PageLanguage {
     Constants.headTitle.text = this.vocabulary.english.headTitle;
   }
 
-  changeIndex () {
-    (this.currentIndex === (this.languages.length - 1)) ? this.currentIndex = 0 : this.currentIndex++;
-  }
-
-  changeLanguage () {
-    this.changeIndex();
-    this.languages[this.currentIndex]();
+  changeLanguage (language) {
+    this.languages[language]();
   }
 }
 

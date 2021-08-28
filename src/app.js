@@ -16,14 +16,14 @@ class App extends PureComponent {
 
   clickHandler () {
     const currentLanguage = this.state.currentLanguage;
-    const pageLanguageHandler = this.props.pageLanguageHandler;
-    pageLanguageHandler();
     (currentLanguage === 'ru') ? this.setState({currentLanguage: 'eng'}) : this.setState({currentLanguage: 'ru'});
   }
 
   render () {
     const currentLanguage = this.state.currentLanguage;
     const releaseDate = this.props.releaseDate;
+    const pageLanguageHandler = this.props.pageLanguageHandler;
+    pageLanguageHandler(this.state.currentLanguage);
 
     return (
       <React.Fragment>
