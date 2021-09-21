@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react'
-import { TimeToRelease } from './time-to-release'
-import { BuyPages } from './buy-pages'
-import { Copyright } from './copyright'
+import { Header } from './components/header/index.js'
+import { Main } from './components/main/index.js'
+import { Footer } from './components/footer/index.js'
 
 class App extends PureComponent {
   constructor(props) {
@@ -27,32 +27,9 @@ class App extends PureComponent {
 
     return (
       <React.Fragment>
-        <header className = 'page-header'>
-          <h1 className = 'visually-hidden'>{(currentLanguage === 'ru') ? 'Отсчет времени до релиза S.T.A.L.K.E.R. 2' : 'Counter till release date of S.T.A.L.K.E.R. 2'}</h1>
-          <div className = 'container page-header__wrapper'>
-            <button onClick = {this.clickHandler} className = 'page-header__change-language'>{currentLanguage}</button>
-          </div>
-        </header>
-        <main className = 'page-main'>
-          <section className = 'timer container'>
-            <div className = 'timer__wrapper'>
-              <h2 className='timer__header'>{(currentLanguage === 'ru') ? 'Отсчет времени до релиза\u00A0S.T.A.L.K.E.R.\u00A02' : 'Counter till release date\u00A0of\u00A0S.T.A.L.K.E.R.\u00A02'}</h2>
-              <dl className = 'timer__time-difference-list'>
-                <TimeToRelease key = 'monthCounter' date = {releaseDate} timeMethod = 'months' language = {currentLanguage}/>
-                <TimeToRelease key = 'daysCounter' date = {releaseDate} timeMethod = 'days' language = {currentLanguage}/>
-                <TimeToRelease key = 'hoursCounter' date = {releaseDate} timeMethod = 'hours' language = {currentLanguage}/>
-                <TimeToRelease key = 'minutesCounter' date = {releaseDate} timeMethod = 'minutes' language = {currentLanguage}/>
-                <TimeToRelease key = 'secondsCounter' date = {releaseDate} timeMethod = 'seconds' language = {currentLanguage}/>
-              </dl>
-              <dl className = 'timer__link-list'>
-                <BuyPages key = 'buyPages' language={currentLanguage}/>
-              </dl>
-            </div>
-          </section>
-        </main>
-        <footer>
-          <section className='container'><Copyright key = 'copyright' language = {currentLanguage}/></section>
-        </footer>
+        <Header clickHandler = { this.clickHandler } currentLanguage = { currentLanguage }/>
+        <Main currentLanguage = { currentLanguage } releaseDate = { releaseDate }/>
+        <Footer currentLanguage = { currentLanguage }/>
       </React.Fragment>
     )
   }
